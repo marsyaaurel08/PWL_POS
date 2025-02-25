@@ -12,7 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('m_user', function (Blueprint $table) {
-            //
+            $table->id('user_id');
+            $table->unsignedBigInteger('level_id')->index(); 
+            $table->string('username', 20)->unique();
+            $table->string('nama', 100);
+            $table->string('password');
+            $table->timestamps();
+
+            $table->foreign('level_id')->rferences('level_id')->on('m_level');
         });
     }
 
