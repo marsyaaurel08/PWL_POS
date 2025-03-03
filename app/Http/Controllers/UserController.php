@@ -19,7 +19,12 @@ class UserController extends Controller
 
         UserModel::create($data);
         */
-        $user = UserModel::count();
+        $user = UserModel::firstOrCreate(
+            [
+                'username' => 'manager',
+                'nama' => 'Manager',
+            ],
+        );
         return view('user', ['data' => $user]);
     }
 }
