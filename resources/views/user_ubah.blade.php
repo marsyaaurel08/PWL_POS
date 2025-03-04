@@ -8,7 +8,8 @@
     <a href="/user">Kembali</a>
     <br><br>
 
-    <form method="post" action="/user/ubah_simpan/{{ $data->user_id }}">
+    <form method="post" action="{{ route('user.ubah_simpan', $data->user_id) }}">
+
 
         {{ csrf_field() }}
         {{ method_field("PUT") }}
