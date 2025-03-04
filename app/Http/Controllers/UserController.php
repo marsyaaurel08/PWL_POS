@@ -14,10 +14,12 @@ class UserController extends Controller
         $user = UserModel::all();
         return view('user', ['data' => $user]);
     }
+
     public function tambah()
     {
         return view('user_tambah');
     }
+
     public function tambah_simpan(Request $request)
     {
         UserModel::create([
@@ -28,6 +30,12 @@ class UserController extends Controller
         ]);
 
         return redirect('/user');
+    }
+
+    public function ubah($id)
+    {
+        $user = UserModel::find($id);
+        return view('user_ubah', ['data' => $user]);
     }
 }
 
