@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LevelModel;
+use App\Models\User;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -104,6 +105,48 @@ class UserController extends Controller
         $activeMenu = 'user';
 
         return view('user.show', ['breadcrumb' => $breadcrumb, 'page'=> $page, 'user' => $user, 'activeMenu' => $activeMenu]);
+    }
+
+    //Menampilkan halaman form edit user
+    public function edit(string $id)
+    {
+        $user = UserModel::find($id);
+        $level = LevelModel::all();
+
+        $breadcrumb = (object) [
+            'title' => 'Edit user',
+            'list' => ['Home', 'User', 'Edit']
+        ];
+
+        $page = (object) [
+            'title' => 'Edit user'
+        ];
+
+        $activeMenu = 'user'; //set menu yang sedang aktif
+
+        return view('user.edit', ['breadcrumb' => $breadcrumb, 'page' => $page, 'user' => $user, 'level' => $level, 'activeMenu' => $activeMenu]);
+    }
+
+    //Menyimpan perubahan data user
+    public function update(Request $request, string $id)
+    {
+        $request->validate([
+            //username harus diisi, berupa string, minim 3karakter
+            //bernilai unik di tabel m_user kolom username kecuali untuk user dengan id yang sedang diedit
+            'username' => 'required|string|min:3|unique:m_user,username,'.$id.',user_id',
+            'nama' => 'required|string|max:100', //nama harus diisi, max 100 karakter
+            'password' => 'nullable|min:5', //password bisa diisi minim 5 karakter
+            'level_id' => 'required|integer' //level_id harus diisi berupa int/angka
+        ]);
+
+        UserModel::find($id)->update([
+            'username' => $request->username,
+            'nama' => $request->nama,
+            'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
+            'level_id' => $request->level_id
+        ]);
+
+        return redirect('/user')->with('success', 'Data user berhasil diubah');
     }
 
     public function tambah()
