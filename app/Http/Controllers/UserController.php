@@ -28,6 +28,27 @@ class UserController extends Controller
         
     }
 
+    //Ambil data user dalam bentuk json untuk datatables
+    public function list(Request $request)
+    {
+        $users = UserModel::select('user_id', 'username', 'nama', 'level_id') ->with('level');
+
+        return DataTables::pf($users)
+        //menambahkan kolom index
+        ->addIndexColumn()
+        ->addColumn('aksi', function ($user) {
+            $btn = '<a href ="'.url('/user/' . $user->user_id).'" class="btn btn-info btn-sm">Detail</a> ';
+            $btn .= '<a href ="'.url('/user/' . $user->user_id . '/edit').'" class="btn btn-warning btn-sm">Edit</a> ';
+            $btn .= '<form class="d-inline-block" method="POST" action="'.url('/user/' .$user->user_id).'">'
+            .csrf_field() . method_field('DELETE') .
+            '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');
+            ">Hapus</button></form>';
+            return $btn;
+        })
+        ->rawColumns(['aksi'])
+        ->make(true);
+    }
+
     public function tambah()
     {
         return view('user_tambah');
