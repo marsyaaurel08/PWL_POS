@@ -33,7 +33,7 @@ class UserController extends Controller
     {
         $users = UserModel::select('user_id', 'username', 'nama', 'level_id') ->with('level');
 
-        return DataTables::pf($users)
+        return DataTables::of($users)
         //menambahkan kolom index
         ->addIndexColumn()
         ->addColumn('aksi', function ($user) {
