@@ -34,7 +34,7 @@ class KategoriController extends Controller
     {
         $kategoris = KategoriModel::select('kategori_id', 'kategori_kode', 'kategori_nama');
 
-        if ($request->level_id) {
+        if ($request->kategori_id) {
             $kategoris->where('kategori_id', $request->kategori_id);
         }
 
