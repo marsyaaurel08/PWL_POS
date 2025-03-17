@@ -191,6 +191,14 @@ class UserController extends Controller
         return redirect('/');
     }
 
+    //Confirm ajax
+    public function confirm_ajax(string $id)
+    {
+        $user = UserModel::find($id);
+
+        return view('user.confirm_ajax', ['user' => $user]);
+    }
+
     // Menampilkan detail user
     public function show(string $id)
     {
