@@ -212,23 +212,29 @@ class UserController extends Controller
     public function delete_ajax(Request $request, $id)
     {
         if ($request->ajax() || $request->wantsJson()) {
-            $user = UserModel::find($id);
-            if ($user) {
-                $user->delete();
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Data berhasil dihapus'
-                ]);
-            } else {
+            try {
+                $user = UserModel::find($id);
+                if ($user) {
+                    $user->delete();
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Data berhasil dihapus'
+                    ]);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan'
+                    ]);
+                }
+            } catch (\Exception $e) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Data tidak ditemukan'
+                    'message' => 'Data tidak dapat dihapus karena terhubung dengan data lain'
                 ]);
             }
         }
         return redirect('/');
     }
-
     // Menampilkan detail user
     /*public function show(string $id)
     {
