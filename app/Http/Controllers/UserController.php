@@ -60,7 +60,7 @@ class UserController extends Controller
     }
 
     //Menampilkan halaman form tambah user
-    public function create()
+    /*public function create()
     {
         $breadcrumb = (object) [
             'title' => 'Tambah User',
@@ -95,7 +95,7 @@ class UserController extends Controller
         ]);
 
         return redirect('/user')->with('success', 'Data user berhasil disimpan');
-    }
+    }*/
 
     // Menambah data baru dengan ajax
     public function create_ajax()
@@ -230,7 +230,7 @@ class UserController extends Controller
     }
 
     // Menampilkan detail user
-    public function show(string $id)
+    /*public function show(string $id)
     {
         $user = UserModel::with('level')->find($id);
 
@@ -306,5 +306,5 @@ class UserController extends Controller
             // Jika terjadi error ketika menghapus data, redirect kembali ke halaman dengan membawa pesan error
             return redirect('/user')->with('error', 'Data user gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
         }
-    }
+    }*/
 }
