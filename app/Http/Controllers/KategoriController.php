@@ -30,7 +30,7 @@ class KategoriController extends Controller
         
     }
 
-    //Ambil data level dalam bentuk json untuk datatables
+    //Ambil data kategori dalam bentuk json untuk datatables
     public function list(Request $request)
     {
         $kategoris = KategoriModel::select('kategori_id', 'kategori_kode', 'kategori_nama');
