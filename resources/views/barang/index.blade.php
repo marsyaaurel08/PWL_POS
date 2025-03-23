@@ -95,7 +95,7 @@ data-keyboard="false" data-width="75%" aria-hidden="true"></div>
                 orderable: true,
                 searchable: true
             },{
-                data: "harga_beli",
+                data: "harga_jual",
                 className: "",
                 orderable: true,
                 searchable: true
