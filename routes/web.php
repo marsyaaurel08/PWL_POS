@@ -43,7 +43,7 @@ Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'postlogin']);
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth');
 
-Route::middleware(['auth'])->group(function() { 
+Route::middleware(['authorize:ADM'])->group(function() { 
     
     Route::get('/', [WelcomeController::class, 'index']);
 
@@ -58,7 +58,7 @@ Route::middleware(['auth'])->group(function() {
         Route::get('/{id}/delete_ajax', [UserController::class, 'confirm_ajax']); 
         Route::delete('/{id}/delete_ajax', [UserController::class, 'delete_ajax']); 
     });
-
+    
     Route::group(['prefix' => 'level'], function () {
         Route::get('/', [LevelController::class, 'index']); 
         Route::post('/list', [LevelController::class, 'list']); 
