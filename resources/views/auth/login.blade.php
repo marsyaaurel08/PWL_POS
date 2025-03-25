@@ -12,7 +12,7 @@
     <!-- icheck bootstrap -->
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
 </head>
@@ -83,7 +83,7 @@
             $("#form-login").validate({
                 rules: {
                     username: { required: true, minlength: 4, maxlength: 20 },
-                    password: { required: true, minlength: 6, maxlength: 20 }
+                    password: { required: true, minlength: 5, maxlength: 20 }
                 },
                 submitHandler: function(form) {
                     $.ajax({
@@ -119,10 +119,10 @@
                     error.addClass('invalid-feedback');
                     element.closest('.input-group').append(error);
                 },
-                highlight: function(element) {
+                highlight: function(element, errorClass, validClass) {
                     $(element).addClass('is-invalid');
                 },
-                unhighlight: function(element) {
+                unhighlight: function(element, errorClass, validClass) {
                     $(element).removeClass('is-invalid');
                 }
             });
