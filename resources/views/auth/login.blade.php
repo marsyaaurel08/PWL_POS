@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login Pengguna</title>
-    
+
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
@@ -16,6 +17,7 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
 </head>
+
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="card card-outline card-primary">
@@ -54,12 +56,15 @@
                         <div class="col-4">
                             <button type="submit" class="btn btn-primary btn-block">Sign In</button>
                         </div>
+                        <div class="text-center mt-3 ">
+                            <p>Don't have an account?<a href="{{ url('register') }}"> Register here</a></p>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    
+
     <!-- jQuery -->
     <script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
     <!-- Bootstrap 4 -->
@@ -71,19 +76,27 @@
     <script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
-    
+
     <script>
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        
+
         $(document).ready(function() {
             $("#form-login").validate({
                 rules: {
-                    username: { required: true, minlength: 4, maxlength: 20 },
-                    password: { required: true, minlength: 5, maxlength: 20 }
+                    username: {
+                        required: true,
+                        minlength: 4,
+                        maxlength: 20
+                    },
+                    password: {
+                        required: true,
+                        minlength: 5,
+                        maxlength: 20
+                    }
                 },
                 submitHandler: function(form) {
                     $.ajax({
@@ -129,4 +142,5 @@
         });
     </script>
 </body>
+
 </html>
