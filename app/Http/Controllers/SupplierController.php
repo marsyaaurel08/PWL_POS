@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class SupplierController extends Controller
 {
@@ -18,15 +19,11 @@ class SupplierController extends Controller
             'list' => ['Home', 'Supplier']
         ];
 
-        $page = (object) [
-            'title' => 'Daftar supplier yang terdaftar dalam sistem'
-        ];
-
         $activeMenu = 'supplier'; // set menu yang sedang aktif
 
-        $supplier = SupplierModel::all(); //ambil data level untuk filter level
+        $supplier = SupplierModel::select('supplier_id', 'supplier_nama')->get();; //ambil data level untuk filter supplier
 
-        return view('supplier.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'supplier' => $supplier, 'activeMenu' => $activeMenu]);
+        return view('supplier.index', ['breadcrumb' => $breadcrumb, 'supplier' => $supplier, 'activeMenu' => $activeMenu]);
         
     }
 
@@ -35,8 +32,9 @@ class SupplierController extends Controller
     {
         $suppliers = SupplierModel::select('supplier_id', 'supplier_kode', 'supplier_nama', 'supplier_alamat');
 
-        if ($request->supplier_id) {
-            $suppliers->where('supplier_id', $request->supplier_id);
+            $supplier_id = $request->input('filter_supplier');
+            if (!empty($supplier_id)){
+            $suppliers->where('supplier_id', $supplier_id);
         }
 
         return DataTables::of($suppliers)
@@ -59,7 +57,7 @@ class SupplierController extends Controller
 
 
     //Menampilkan halaman form tambah supplier
-   /* public function create()
+   public function create()
     {
         $breadcrumb = (object) [
             'title' => 'Tambah Supplier',
@@ -92,7 +90,7 @@ class SupplierController extends Controller
         ]);
 
         return redirect('/supplier')->with('success', 'Data level berhasil disimpan');
-    }*/
+    }
 
     // Menambah data baru dengan ajax
     public function create_ajax()
@@ -168,7 +166,7 @@ class SupplierController extends Controller
 
             $check = SupplierModel::find($id);
             if ($check) {
-                if (!$request->filled('supplier_kode')) { // jika kategori kode tidak diisi, maka hapus dari request
+                if (!$request->filled('supplier_kode')) { // jika supplier kode tidak diisi, maka hapus dari request
                     $request->request->remove('supplier_kode');
                 }
                 $check->update($request->all());
@@ -228,6 +226,72 @@ class SupplierController extends Controller
        }
        return redirect('/');
    }
+
+   public function import()
+    {
+        return view('supplier.import');
+    }
+
+    public function import_ajax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                // validasi file harus xls atau xlsx, max 1MB
+                'file_supplier' => ['required', 'mimes:xlsx', 'max:1024']
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+
+            $file = $request->file('file_supplier'); // ambil file dari request
+
+            $reader = IOFactory::createReader('Xlsx'); // load reader file excel
+            $reader->setReadDataOnly(true); // hanya membaca data
+            $spreadsheet = $reader->load($file->getRealPath()); // load file excel
+            $sheet = $spreadsheet->getActiveSheet(); // ambil sheet yang aktif
+
+            $data = $sheet->toArray(null, false, true, true); // ambil data excel
+
+            $insert = [];
+
+            if (count($data) > 1) { // jika data lebih dari 1 baris
+                foreach ($data as $baris => $value) {
+                    if ($baris > 1) { // baris ke 1 adalah header, maka lewati
+                        $insert[] = [
+                            'supplier_kode'  => $value['A'],
+                            'supplier_nama'  => $value['B'],
+                            'supplier_alamat' => $value['C'],
+                            'created_at'   => now(),
+                        ];
+                    }
+                }
+
+                if (count($insert) > 0) {
+                    // insert data ke database, jika data sudah ada, maka diabaikan
+                    SupplierModel::insertOrIgnore($insert);
+                }
+
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'Data berhasil diimport'
+                ]);
+            } else {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Tidak ada data yang diimport'
+                ]);
+            }
+        }
+
+        return redirect('/');
+    }
 
     // Menampilkan detail supplier
     /*public function show(string $id)

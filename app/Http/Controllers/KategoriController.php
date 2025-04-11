@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class KategoriController extends Controller
 {
@@ -18,15 +19,11 @@ class KategoriController extends Controller
             'list' => ['Home', 'Kategori']
         ];
 
-        $page = (object) [
-            'title' => 'Daftar kategori barang yang terdaftar dalam sistem'
-        ];
-
         $activeMenu = 'kategori'; // set menu yang sedang aktif
 
-        $kategori = KategoriModel::all(); //ambil data kategori untuk filter level
+        $kategori = KategoriModel::select('kategori_id', 'kategori_nama')->get(); //ambil data kategori untuk filter kategori
 
-        return view('kategori.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'kategori' => $kategori, 'activeMenu' => $activeMenu]);
+        return view('kategori.index', ['breadcrumb' => $breadcrumb, 'kategori' => $kategori, 'activeMenu' => $activeMenu]);
         
     }
 
@@ -35,10 +32,10 @@ class KategoriController extends Controller
     {
         $kategoris = KategoriModel::select('kategori_id', 'kategori_kode', 'kategori_nama');
 
-        if ($request->kategori_id) {
-            $kategoris->where('kategori_id', $request->kategori_id);
+            $kategori_id = $request->input('filter_kategori');
+            if (!empty($kategori_id)){
+            $kategoris->where('kategori_id', $kategori_id);
         }
-
         return DataTables::of($kategoris)
         ->addIndexColumn()
         ->addColumn('aksi', function ($kategori) {
@@ -58,7 +55,7 @@ class KategoriController extends Controller
 
 
     //Menampilkan halaman form tambah kategori
-    /*public function create()
+    public function create()
     {
         $breadcrumb = (object) [
             'title' => 'Tambah Kategori Barang',
@@ -88,9 +85,9 @@ class KategoriController extends Controller
             'kategori_nama' => $request->kategori_nama,
         ]);
 
-        return redirect('/kategori')->with('success', 'Data level berhasil disimpan');
+        return redirect('/kategori')->with('success', 'Data kategori berhasil disimpan');
     }
-    */
+    
 
     // Menambah data baru dengan ajax
     public function create_ajax()
@@ -225,6 +222,71 @@ class KategoriController extends Controller
        return redirect('/');
    }
 
+   public function import()
+    {
+        return view('kategori.import');
+    }
+
+    public function import_ajax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                // validasi file harus xls atau xlsx, max 1MB
+                'file_kategori' => ['required', 'mimes:xlsx', 'max:1024']
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+
+            $file = $request->file('file_kategori'); // ambil file dari request
+
+            $reader = IOFactory::createReader('Xlsx'); // load reader file excel
+            $reader->setReadDataOnly(true); // hanya membaca data
+            $spreadsheet = $reader->load($file->getRealPath()); // load file excel
+            $sheet = $spreadsheet->getActiveSheet(); // ambil sheet yang aktif
+
+            $data = $sheet->toArray(null, false, true, true); // ambil data excel
+
+            $insert = [];
+
+            if (count($data) > 1) { // jika data lebih dari 1 baris
+                foreach ($data as $baris => $value) {
+                    if ($baris > 1) { // baris ke 1 adalah header, maka lewati
+                        $insert[] = [
+                            'kategori_kode'  => $value['A'],
+                            'kategori_nama'  => $value['B'],
+                            'created_at'   => now(),
+                        ];
+                    }
+                }
+
+                if (count($insert) > 0) {
+                    // insert data ke database, jika data sudah ada, maka diabaikan
+                    KategoriModel::insertOrIgnore($insert);
+                }
+
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'Data berhasil diimport'
+                ]);
+            } else {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Tidak ada data yang diimport'
+                ]);
+            }
+        }
+
+        return redirect('/');
+    }
+
     // Menampilkan detail kategori
     /*public function show(string $id)
     {
@@ -276,7 +338,7 @@ class KategoriController extends Controller
             'kategori_nama' => $request->kategori_nama,
         ]);
 
-        return redirect('/kategori')->with('success', 'Data level berhasil diubah');
+        return redirect('/kategori')->with('success', 'Data kategori berhasil diubah');
     }
 
     //Menghapus data kategori
@@ -284,16 +346,16 @@ class KategoriController extends Controller
     {
         $check = KategoriModel::find($id);
         if (!$check) {
-            return redirect('/kategori')->with('error', 'Data level berhasil dihapus');
+            return redirect('/kategori')->with('error', 'Data kategori berhasil dihapus');
         }
         try {
-            KategoriModel::destroy($id); // Hapus data level
+            KategoriModel::destroy($id); // Hapus data kategori
 
-            return redirect('/kategori')->with('success', 'Data level berhasil dihapus');
+            return redirect('/kategori')->with('success', 'Data kategori berhasil dihapus');
         }catch (\Illuminate\Database\QueryException $e) {
 
             // Jika terjadi error ketika menghapus data, redirect kembali ke halaman dengan membawa pesan error
-            return redirect('/kategori')->with('error', 'Data level gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
+            return redirect('/kategori')->with('error', 'Data kategori gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
         }
     
     }*/

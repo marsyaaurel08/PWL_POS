@@ -53,7 +53,7 @@ class BarangController extends Controller
             ->make(true);
     }
 
-    /*public function create()
+    public function create()
     {
         $breadcrumb = (object) [
             'title' => 'Tambah Barang',
@@ -83,7 +83,7 @@ class BarangController extends Controller
         BarangModel::create($request->all());
 
         return redirect('/barang')->with('success', 'Data barang berhasil disimpan');
-    }*/
+    }
 
     // Menambah data baru dengan ajax
     public function create_ajax()
