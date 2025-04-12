@@ -65,9 +65,9 @@
         });
     }
 
-    var tableKategori;
+    var dataKategori;
     $(document).ready(function() {
-        tableKategori = $('#table-kategori').DataTable({
+        dataKategori = $('#table-kategori').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
@@ -114,12 +114,12 @@
 
         $('#table-kategori_filter input').unbind().bind().on('keyup', function(e) {
             if (e.keyCode == 13) {
-                tableKategori.search(this.value).draw();
+                dataKategori.search(this.value).draw();
             }
         });
 
         $('.filter_kategori').change(function() {
-            tableKategori.draw();
+            dataKategori.reload();
         });
     });
 </script>

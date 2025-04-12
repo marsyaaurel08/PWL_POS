@@ -65,9 +65,9 @@
         });
     }
 
-    var tableLevel;
+    var dataLevel;
     $(document).ready(function() {
-        tableLevel = $('#table-level').DataTable({
+        dataLevel = $('#table-level').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
@@ -114,12 +114,12 @@
 
         $('#table-level_filter input').unbind().bind().on('keyup', function(e) {
             if (e.keyCode == 13) {
-                tableLevel.search(this.value).draw();
+                dataLevel.search(this.value).draw();
             }
         });
 
         $('.filter_level').change(function() {
-            tableLevel.draw();
+            dataLevel.reload();
         });
     });
 </script>

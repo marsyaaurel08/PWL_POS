@@ -66,9 +66,9 @@
         });
     }
 
-    var tableUser;
+    var dataUser;
     $(document).ready(function() {
-        tableUser = $('#table-user').DataTable({
+        dataUser = $('#table-user').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
@@ -122,12 +122,12 @@
 
         $('#table-user_filter input').unbind().bind().on('keyup', function(e) {
             if (e.keyCode == 13) {
-                tableUser.search(this.value).draw();
+                dataUser.search(this.value).draw();
             }
         });
 
         $('.filter_level').change(function() {
-            tableUser.draw();
+            dataUser.reload();
         });
     });
 </script>

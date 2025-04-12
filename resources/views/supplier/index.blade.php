@@ -66,9 +66,9 @@
         });
     }
 
-    var tableSupplier;
+    var dataSupplier;
     $(document).ready(function() {
-        tableSupplier = $('#table-supplier').DataTable({
+        dataSupplier = $('#table-supplier').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
@@ -122,12 +122,12 @@
 
         $('#table-supplier_filter input').unbind().bind().on('keyup', function(e) {
             if (e.keyCode == 13) {
-                tableSupplier.search(this.value).draw();
+                dataSupplier.search(this.value).draw();
             }
         });
 
         $('.filter_supplier').change(function() {
-            tableSupplier.draw();
+            dataSupplier.reload();
         });
     });
 </script>
