@@ -9,6 +9,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 use Monolog\Level;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LevelController extends Controller
 {
@@ -333,6 +334,20 @@ public function import()
 
         $writer->save('php://output');
         exit;
+    }
+    public function export_pdf()
+    {
+        $level = LevelModel::select('level_kode', 'level_nama')
+        ->orderBy('level_id')
+        ->get();
+
+        // use Barryvdh\Dompdf\Facade\pdf;
+        $pdf = Pdf::loadView('level.export_pdf', ['level' => $level]);
+        $pdf->setPaper('a4', 'potrait'); // set ukuran kertas dan orientasi
+        $pdf->setOption("isRemoteEnabled", true); // set true jika ada gambar dari url
+        $pdf->render();
+
+        return $pdf->stream('Data Level' .date('Y-m-d H:i:s'). '.pdf');
     }
 
 
