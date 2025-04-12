@@ -53,7 +53,7 @@ class BarangController extends Controller
             ->make(true);
     }
 
-    public function create()
+   /* public function create()
     {
         $breadcrumb = (object) [
             'title' => 'Tambah Barang',
@@ -83,7 +83,7 @@ class BarangController extends Controller
         BarangModel::create($request->all());
 
         return redirect('/barang')->with('success', 'Data barang berhasil disimpan');
-    }
+    }*/
 
     // Menambah data baru dengan ajax
     public function create_ajax()
@@ -292,6 +292,15 @@ public function import_ajax(Request $request)
     }
 
     return redirect('/');
+}
+
+public function export_excel()
+{
+    // ambil data barang yang akan di export
+    $barang = BarangModel::select('kategori_id', 'barang_kode', 'barang_nama', 'harga_beli', 'harga_jual')
+    ->orderBy('kategori_id')
+    ->with('kategori')
+    ->get();
 }
 
 
