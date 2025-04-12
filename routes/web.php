@@ -61,6 +61,7 @@ Route::middleware(['authorize:ADM,MNG,STF,SLS,SPV,SMD'])->group(function() {
         Route::delete('/{id}/delete_ajax', [UserController::class, 'delete_ajax']); 
         Route::get('/import', [UserController::class, 'import']); //ajax form upload excel
         Route::post('/import_ajax', [UserController::class, 'import_ajax']); //ajax import excel
+        Route::get('/export_excel', [UserController::class, 'export_excel']); // export excel
     });
     
     Route::group(['prefix' => 'level'], function () {
@@ -75,6 +76,7 @@ Route::middleware(['authorize:ADM,MNG,STF,SLS,SPV,SMD'])->group(function() {
         Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']); 
         Route::get('/import', [LevelController::class, 'import']); //ajax form upload excel
         Route::post('/import_ajax', [LevelController::class, 'import_ajax']); //ajax import excel
+        Route::get('/export_excel', [LevelController::class, 'export_excel']); // export excel
     });
 
     Route::group(['prefix' => 'kategori'], function () {
@@ -89,6 +91,7 @@ Route::middleware(['authorize:ADM,MNG,STF,SLS,SPV,SMD'])->group(function() {
         Route::delete('/{id}/delete_ajax', [KategoriController::class, 'delete_ajax']);
         Route::get('/import', [KategoriController::class, 'import']); //ajax form upload excel
         Route::post('/import_ajax', [KategoriController::class, 'import_ajax']); //ajax import excel
+        Route::get('/export_excel', [KategoriController::class, 'export_excel']); // export excel
     });
 
     Route::group(['prefix' => 'supplier'], function () {
@@ -103,6 +106,7 @@ Route::middleware(['authorize:ADM,MNG,STF,SLS,SPV,SMD'])->group(function() {
         Route::delete('/{id}/delete_ajax', [SupplierController::class, 'delete_ajax']); 
         Route::get('/import', [SupplierController::class, 'import']); //ajax form upload excel
         Route::post('/import_ajax', [SupplierController::class, 'import_ajax']); //ajax import excel
+        Route::get('/export_excel', [SupplierController::class, 'export_excel']); // export excel
     });
 
     Route::group(['prefix' => 'barang'], function () {

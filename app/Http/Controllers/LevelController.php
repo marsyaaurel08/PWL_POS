@@ -55,7 +55,7 @@ class LevelController extends Controller
 
 
     //Menampilkan halaman form tambah level
-    public function create()
+   /* public function create()
     {
         $breadcrumb = (object) [
             'title' => 'Tambah Level',
@@ -86,7 +86,7 @@ class LevelController extends Controller
         ]);
 
         return redirect('/level')->with('success', 'Data level berhasil disimpan');
-    }
+    } */
 
     // Menambah data baru dengan ajax
     public function create_ajax()
@@ -284,6 +284,55 @@ public function import()
         }
 
         return redirect('/');
+    }
+
+    public function export_excel()
+    {
+        // ambil data level yang akan di export
+        $level = LevelModel::select('level_kode', 'level_nama')
+            ->orderBy('level_id')
+            ->get();
+
+        // load library excel
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet(); // ambil sheet yang aktif
+
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Level Kode');
+        $sheet->setCellValue('C1', 'Level Nama');
+
+        $sheet->getStyle('A1:C1')->getFont()->setBold(true); // bold header
+
+        $no = 1; //nomor data dimulai dari 1
+        $baris = 2; //baris data dimulai dari baris ke 2
+        foreach ($level as $key => $value) {
+            $sheet->setCellValue('A' . $baris, $no);
+            $sheet->setCellValue('B' . $baris, $value->level_kode);
+            $sheet->setCellValue('C' . $baris, $value->level_nama);
+            $baris++;
+            $no++;
+        }
+
+        foreach (range('A', 'C') as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true); // set auto size untuk kolom
+        }
+
+        $sheet->setTitle('Data Level'); // set title sheet
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = 'Data Level' . date('Y-m-d H:i:s') . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: cache, mustrevalidate');
+        header('Pragma: public');
+
+        $writer->save('php://output');
+        exit;
     }
 
 
