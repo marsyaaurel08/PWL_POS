@@ -9,7 +9,7 @@
                 src="{{ $profil && $profil->foto ? asset('storage/foto/' . $profil->foto) : asset('storage/foto/default.png') }}"
                 alt="Foto Profil"
                 class="rounded-circle"
-                style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #ccc;">
+                style="width: 150px; height: 150px; object-fit: cover; border: 3px solid #ccc;">
         </div>
 
         {{-- Info User --}}

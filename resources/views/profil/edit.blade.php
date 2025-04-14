@@ -11,7 +11,7 @@
         <div class="mb-3 text-center">
             <img src="{{ $profil && $profil->foto ? asset('storage/foto/' . $profil->foto) : asset('storage/foto/default.png') }}"
                 class="rounded-circle"
-                style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #ccc;">
+                style="width: 200px; height: 200px; object-fit: cover; border: 3px solid #ccc;">
         </div>
 
         {{-- Input Upload Foto --}}
