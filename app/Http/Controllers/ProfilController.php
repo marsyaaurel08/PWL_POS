@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\ProfilModel; 
+use App\Models\ProfilModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -27,8 +27,15 @@ class ProfilController extends Controller
     {
         $profil = ProfilModel::where('user_id', Auth::user()->user_id)->first();
 
-        return view('profil.edit', compact('profil'));
+        $breadcrumb = (object) [
+            'title' => 'Edit Profil',
+            'list' => ['Home', 'Profil', 'Edit Profil']
+        ];
+        $activeMenu = 'profil';
+
+        return view('profil.edit', compact('profil', 'activeMenu', 'breadcrumb'));
     }
+
 
     public function update(Request $request)
     {
