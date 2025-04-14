@@ -134,5 +134,7 @@ Route::middleware(['authorize:ADM,MNG,STF,SLS,SPV,SMD'])->group(function () {
         Route::get('/', [ProfilController::class, 'index'])->name('profil.index');
         Route::get('/edit', [ProfilController::class, 'edit'])->name('profil.edit');
         Route::post('/update', [ProfilController::class, 'update'])->name('profil.update');
+        Route::get('/hapus-foto', [ProfilController::class, 'deleteFoto'])->name('profil.deleteFoto');
+
     });
 });

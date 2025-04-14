@@ -63,4 +63,20 @@ class ProfilController extends Controller
 
         return redirect()->route('profil.index')->with('success', 'Profil berhasil diperbarui');
     }
+    public function deleteFoto()
+    {
+        $userId = Auth::user()->user_id;
+        $profil = ProfilModel::where('user_id', $userId)->first();
+
+        if ($profil && $profil->foto && $profil->foto != 'default.png') {
+            // Hapus file lama dari storage
+            Storage::disk('public')->delete('foto/' . $profil->foto);
+        }
+
+        // Setel ulang ke default
+        $profil->foto = 'default.png';
+        $profil->save();
+
+        return redirect()->route('profil.index')->with('success', 'Foto profil berhasil dihapus.');
+    }
 }

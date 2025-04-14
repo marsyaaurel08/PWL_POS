@@ -20,6 +20,11 @@
 
         {{-- Tombol Edit --}}
         <a href="{{ route('profil.edit') }}" class="btn btn-primary btn-sm">Edit Foto Profil</a>
+        <a href="{{ route('profil.deleteFoto') }}"
+            onclick="return confirm('Yakin ingin menghapus foto profil?')"
+            class="btn btn-danger btn-sm mt-2">
+            Hapus Foto Profil
+        </a>
     </div>
 </div>
 @endsection
