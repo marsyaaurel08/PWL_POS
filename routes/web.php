@@ -8,6 +8,7 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeController;
+use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,11 +47,11 @@ Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth');
 Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/register', [AuthController::class, 'store'])->name('register.store');
 
-Route::middleware(['authorize:ADM,MNG,STF,SLS,SPV,SMD'])->group(function () {
+//Route::middleware(['authorize:ADM,MNG,STF,SLS,SPV,SMD'])->group(function () {
 
     Route::get('/', [WelcomeController::class, 'index']);
 
-    Route::group(['prefix' => 'user'], function () {
+    Route::group(['prefix' => 'user', 'middleware' => 'authorize:ADM'], function () {
         Route::get('/', [UserController::class, 'index']);
         Route::post('/list', [UserController::class, 'list']);
         Route::get('/create_ajax', [UserController::class, 'create_ajax']);
@@ -66,7 +67,7 @@ Route::middleware(['authorize:ADM,MNG,STF,SLS,SPV,SMD'])->group(function () {
         Route::get('/export_pdf', [UserController::class, 'export_pdf']); // export pdf
     });
 
-    Route::group(['prefix' => 'level'], function () {
+    Route::group(['prefix' => 'level', 'middleware' => 'authorize:ADM'], function () {
         Route::get('/', [LevelController::class, 'index']);
         Route::post('/list', [LevelController::class, 'list']);
         Route::get('/create_ajax', [LevelController::class, 'create_ajax']);
@@ -82,7 +83,7 @@ Route::middleware(['authorize:ADM,MNG,STF,SLS,SPV,SMD'])->group(function () {
         Route::get('/export_pdf', [LevelController::class, 'export_pdf']); // export pdf
     });
 
-    Route::group(['prefix' => 'kategori'], function () {
+    Route::group(['prefix' => 'kategori', 'middleware' => 'authorize:ADM,MNG'], function () {
         Route::get('/', [KategoriController::class, 'index']);
         Route::post('/list', [KategoriController::class, 'list']);
         Route::get('/create_ajax', [KategoriController::class, 'create_ajax']);
@@ -98,7 +99,7 @@ Route::middleware(['authorize:ADM,MNG,STF,SLS,SPV,SMD'])->group(function () {
         Route::get('/export_pdf', [KategoriController::class, 'export_pdf']); // export pdf
     });
 
-    Route::group(['prefix' => 'supplier'], function () {
+    Route::group(['prefix' => 'supplier', 'middleware' => 'authorize:ADM,MNG'], function () {
         Route::get('/', [SupplierController::class, 'index']);
         Route::post('/list', [SupplierController::class, 'list']);
         Route::get('/create_ajax', [SupplierController::class, 'create_ajax']);
@@ -114,7 +115,7 @@ Route::middleware(['authorize:ADM,MNG,STF,SLS,SPV,SMD'])->group(function () {
         Route::get('/export_pdf', [SupplierController::class, 'export_pdf']); // export pdf
     });
 
-    Route::group(['prefix' => 'barang'], function () {
+    Route::group(['prefix' => 'barang', 'middleware' => 'authorize:ADM,MNG,STF'], function () {
         Route::get('/', [BarangController::class, 'index']);
         Route::post('/list', [BarangController::class, 'list']);
         Route::get('/create_ajax', [BarangController::class, 'create_ajax']);
@@ -130,11 +131,10 @@ Route::middleware(['authorize:ADM,MNG,STF,SLS,SPV,SMD'])->group(function () {
         Route::get('/export_pdf', [BarangController::class, 'export_pdf']); // export pdf
     });
 
-    Route::group(['prefix' => 'profil'], function () {
+    Route::group(['prefix' => 'profil', 'middleware' => 'authorize:ADM,MNG,STF,SLS,SPV,SMD'], function () {
         Route::get('/', [ProfilController::class, 'index'])->name('profil.index');
         Route::get('/edit', [ProfilController::class, 'edit'])->name('profil.edit');
         Route::post('/update', [ProfilController::class, 'update'])->name('profil.update');
         Route::get('/hapus-foto', [ProfilController::class, 'deleteFoto'])->name('profil.deleteFoto');
 
     });
-});
