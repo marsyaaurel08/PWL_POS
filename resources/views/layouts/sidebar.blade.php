@@ -68,13 +68,14 @@
           <p>Transaksi Penjualan</p>
         </a>
       </li>
-      <li class="nav-header">Tentang Akun</li>
+      <li class="nav-header">Informasi Akun</li>
       <li class="nav-item">
         <a href="{{ url('/profil') }}" class="nav-link {{ ($activeMenu == 'profil') ? 'active' : '' }}">
-          <i class="nav-icon fas fa-user-circle"></i>
-          <p>Profil</p>
+          <i class="nav-icon fas fa-user-alt"></i>
+          <p>Profil Saya</p>
         </a>
       </li>
+      <li class="nav-header">Keluar dari Sistem</li>
       <li class="nav-item">
         <a href="{{ url('/logout') }}" class="nav-link {{ ($activeMenu == '') ? 'active' : '' }}">
           <i class="nav-icon fas fa-sign-out-alt"></i>
