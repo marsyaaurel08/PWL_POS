@@ -3,12 +3,12 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Daftar barang</h3>
+        <h3 class="card-title">Daftar stok barang</h3>
         <div class="card-tools">
-            <button onclick="modalAction(`{{ url('/barang/import') }}`)" class="btn btn-info">Import Barang</button>
-            <a href="{{ url('/barang/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Barang </a>
-            <a href="{{ url('/barang/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export Barang </a>
-            <button onclick="modalAction(`{{ url('/barang/create_ajax') }}`)" class="btn btn-success">Tambah Ajax</button>
+        <button onclick="modalAction(`{{ url('/stok/import') }}`)" class="btn btn-info">Import Stok</button>
+            <a href="{{ url('/stok/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Stok </a>
+            <a href="{{ url('/stok/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export Stok </a>
+            <button onclick="modalAction(`{{ url('/stok/create_ajax') }}`)" class="btn btn-success">Tambah Stok</button>
         </div>
     </div>
     <div class="card-body">
@@ -20,13 +20,13 @@
                     <div class="form-group form-group-sm row text-sm mb-0">
                         <label for="filter_date" class="col-md-1 col-form-label">Filter</label>
                         <div class="col-md-3">
-                            <select name="filter_kategori" class="form-control form-control-sm filter_kategori">
+                            <select name="filter_barang" class="form-control form-control-sm filter_barang">
                                 <option value="">- Semua -</option>
-                                @foreach($kategori as $l)
-                                <option value="{{ $l->kategori_id }}">{{ $l->kategori_nama }}</option>
+                                @foreach($barang as $l)
+                                <option value="{{ $l->barang_id }}">{{ $l->barang_nama }}</option>
                                 @endforeach
                             </select>
-                            <small class="form-text text-muted">Kategori Barang</small>
+                            <small class="form-text text-muted">Nama Barang</small>
                         </div>
                     </div>
                 </div>
@@ -40,15 +40,15 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
 
-        <table class="table table-bordered table-sm table-striped table-hover" id="table-barang">
+        <table class="table table-bordered table-sm table-striped table-hover" id="table-stok">
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Kode Barang</th>
+                    <th>Nama Supplier</th>
                     <th>Nama Barang</th>
-                    <th>Harga Beli</th>
-                    <th>Harga Jual</th>
-                    <th>Kategori</th>
+                    <th>Nama Pengguna</th>
+                    <th>Stok Pada Tanggal</th>
+                    <th>Jumlah Stok</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -69,17 +69,17 @@
         });
     }
 
-    var dataBarang;
+    var dataStok;
     $(document).ready(function() {
-        dataBarang = $('#table-barang').DataTable({
+        dataStok = $('#table-stok').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
-                url: "{{ url('barang/list') }}",
+                url: "{{ url('stok/list') }}",
                 dataType: "json",
                 type: "POST",
                 data: function(d) {
-                    d.filter_kategori = $('.filter_kategori').val();
+                    d.filter_barang = $('.filter_barang').val();
                 }
             },
             columns: [{
@@ -93,21 +93,35 @@
                     }
                 },
                 {
-                    data: "barang_kode",
+                    data: "supplier.supplier_nama",
                     className: "",
-                    width: "10%",
+                    width: "15%",
                     orderable: true,
                     searchable: true
                 },
                 {
-                    data: "barang_nama",
+                    data: "barang.barang_nama",
                     className: "",
-                    width: "37%",
+                    width: "15%",
                     orderable: true,
                     searchable: true
                 },
                 {
-                    data: "harga_beli",
+                    data: "user.username",
+                    className: "",
+                    width: "15%",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "stok_tanggal",
+                    className: "",
+                    width: "20%",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "stok_jumlah",
                     className: "",
                     width: "10%",
                     orderable: true,
@@ -115,23 +129,6 @@
                     render: function(data, type, row) {
                         return new Intl.NumberFormat('id-ID').format(data);
                     }
-                },
-                {
-                    data: "harga_jual",
-                    className: "",
-                    width: "10%",
-                    orderable: true,
-                    searchable: false,
-                    render: function(data, type, row) {
-                        return new Intl.NumberFormat('id-ID').format(data);
-                    }
-                },
-                {
-                    data: "kategori.kategori_nama",
-                    className: "",
-                    width: "14%",
-                    orderable: true,
-                    searchable: false
                 },
                 {
                     data: "aksi",
@@ -143,14 +140,14 @@
             ]
         });
 
-        $('#table-barang_filter input').unbind('keyup').on('keyup', function(e) {
+        $('#table-stok_filter input').unbind('keyup').on('keyup', function(e) {
             if (e.keyCode == 13) {
-                dataBarang.search(this.value).draw();
+                dataStok.search(this.value).draw();
             }
         });
 
-        $('.filter_kategori').change(function() {
-            dataBarang.ajax.reload();
+        $('.filter_barang').change(function() {
+            dataStok.ajax.reload();
         });
     });
 </script>

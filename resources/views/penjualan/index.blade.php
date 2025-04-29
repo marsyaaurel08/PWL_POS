@@ -3,12 +3,11 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Daftar barang</h3>
+        <h3 class="card-title">Daftar transaksi penjualan</h3>
         <div class="card-tools">
-            <button onclick="modalAction(`{{ url('/barang/import') }}`)" class="btn btn-info">Import Barang</button>
-            <a href="{{ url('/barang/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Barang </a>
-            <a href="{{ url('/barang/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export Barang </a>
-            <button onclick="modalAction(`{{ url('/barang/create_ajax') }}`)" class="btn btn-success">Tambah Ajax</button>
+            <a href="{{ url('/penjualan/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Penjualan </a>
+            <a href="{{ url('/penjualan/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export Penjualan </a>
+            <button onclick="modalAction(`{{ url('/penjualan/create_ajax') }}`)" class="btn btn-success">Tambah Penjualan</button>
         </div>
     </div>
     <div class="card-body">
@@ -20,13 +19,13 @@
                     <div class="form-group form-group-sm row text-sm mb-0">
                         <label for="filter_date" class="col-md-1 col-form-label">Filter</label>
                         <div class="col-md-3">
-                            <select name="filter_kategori" class="form-control form-control-sm filter_kategori">
+                            <select name="filter_pembeli" class="form-control form-control-sm filter_pembeli">
                                 <option value="">- Semua -</option>
-                                @foreach($kategori as $l)
-                                <option value="{{ $l->kategori_id }}">{{ $l->kategori_nama }}</option>
+                                @foreach($penjualan as $l)
+                                <option value="{{ $l->penjualan_id }}">{{ $l->pembeli }}</option>
                                 @endforeach
                             </select>
-                            <small class="form-text text-muted">Kategori Barang</small>
+                            <small class="form-text text-muted">Nama Pembeli</small>
                         </div>
                     </div>
                 </div>
@@ -40,15 +39,14 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
 
-        <table class="table table-bordered table-sm table-striped table-hover" id="table-barang">
+        <table class="table table-bordered table-sm table-striped table-hover" id="table-penjualan">
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Kode Barang</th>
-                    <th>Nama Barang</th>
-                    <th>Harga Beli</th>
-                    <th>Harga Jual</th>
-                    <th>Kategori</th>
+                    <th>Nama Pengguna</th>
+                    <th>Nama Pembeli</th>
+                    <th>Kode Penjualan</th>
+                    <th>Tanggal Penjualan</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -69,17 +67,17 @@
         });
     }
 
-    var dataBarang;
+    var dataPenjualan;
     $(document).ready(function() {
-        dataBarang = $('#table-barang').DataTable({
+        dataPenjualan = $('#table-penjualan').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
-                url: "{{ url('barang/list') }}",
+                url: "{{ url('penjualan/list') }}",
                 dataType: "json",
                 type: "POST",
                 data: function(d) {
-                    d.filter_kategori = $('.filter_kategori').val();
+                    d.filter_pembeli = $('.filter_pembeli').val();
                 }
             },
             columns: [{
@@ -93,45 +91,32 @@
                     }
                 },
                 {
-                    data: "barang_kode",
+                    data: "user.nama",
                     className: "",
-                    width: "10%",
+                    width: "15%",
                     orderable: true,
                     searchable: true
                 },
                 {
-                    data: "barang_nama",
+                    data: "pembeli",
                     className: "",
-                    width: "37%",
+                    width: "15%",
                     orderable: true,
                     searchable: true
                 },
                 {
-                    data: "harga_beli",
+                    data: "penjualan_kode",
                     className: "",
-                    width: "10%",
+                    width: "15%",
                     orderable: true,
-                    searchable: false,
-                    render: function(data, type, row) {
-                        return new Intl.NumberFormat('id-ID').format(data);
-                    }
+                    searchable: true
                 },
                 {
-                    data: "harga_jual",
+                    data: "penjualan_tanggal",
                     className: "",
-                    width: "10%",
+                    width: "20%",
                     orderable: true,
-                    searchable: false,
-                    render: function(data, type, row) {
-                        return new Intl.NumberFormat('id-ID').format(data);
-                    }
-                },
-                {
-                    data: "kategori.kategori_nama",
-                    className: "",
-                    width: "14%",
-                    orderable: true,
-                    searchable: false
+                    searchable: true
                 },
                 {
                     data: "aksi",
@@ -143,14 +128,14 @@
             ]
         });
 
-        $('#table-barang_filter input').unbind('keyup').on('keyup', function(e) {
+        $('#table-penjualan_filter input').unbind('keyup').on('keyup', function(e) {
             if (e.keyCode == 13) {
-                dataBarang.search(this.value).draw();
+                dataPenjualan.search(this.value).draw();
             }
         });
 
-        $('.filter_kategori').change(function() {
-            dataBarang.ajax.reload();
+        $('.filter_pembeli').change(function() {
+            dataPenjualan.ajax.reload();
         });
     });
 </script>

@@ -7,7 +7,7 @@
         <div class="card-tools">
             <button onclick="modalAction(`{{ url('/kategori/import') }}`)" class="btn btn-info">Import Kategori</button>
             <a href="{{ url('/kategori/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Kategori </a>
-            <a href="{{ url('/kategori/export_pdf') }}" class="btn btn-primary"><i class="fa fa-file-pdf"></i> Export Kategori </a>
+            <a href="{{ url('/kategori/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export Kategori </a>
             <button onclick="modalAction(`{{ url('/kategori/create_ajax') }}`)" class="btn btn-success">Tambah Ajax</button>
         </div>
     </div>
@@ -113,14 +113,14 @@
             ]
         });
 
-        $('#table-kategori_filter input').unbind().bind().on('keyup', function(e) {
+        $('#table-kategori_filter input').unbind('keyup').on('keyup', function(e) {
             if (e.keyCode == 13) {
                 dataKategori.search(this.value).draw();
             }
         });
 
         $('.filter_kategori').change(function() {
-            dataKategori.reload();
+            dataKategori.ajax.reload();
         });
     });
 </script>

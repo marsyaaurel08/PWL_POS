@@ -7,7 +7,7 @@
         <div class="card-tools">
             <button onclick="modalAction(`{{ url('/supplier/import') }}`)" class="btn btn-info">Import Supplier</button>
             <a href="{{ url('/supplier/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Supplier </a>
-            <a href="{{ url('/supplier/export_pdf') }}" class="btn btn-primary"><i class="fa fa-file-pdf"></i> Export Supplier </a>
+            <a href="{{ url('/supplier/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export Supplier </a>
             <button onclick="modalAction(`{{ url('/supplier/create_ajax') }}`)" class="btn btn-success">Tambah Ajax</button>
         </div>
     </div>
@@ -121,14 +121,14 @@
             ]
         });
 
-        $('#table-supplier_filter input').unbind().bind().on('keyup', function(e) {
+        $('#table-supplier_filter input').unbind('keyup').on('keyup', function(e) {
             if (e.keyCode == 13) {
                 dataSupplier.search(this.value).draw();
             }
         });
 
         $('.filter_supplier').change(function() {
-            dataSupplier.reload();
+            dataSupplier.ajax.reload();
         });
     });
 </script>

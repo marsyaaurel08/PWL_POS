@@ -9,9 +9,9 @@ class ProfilModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'profils'; // nama tabel baru
-    protected $primaryKey = 'id'; // kalau kamu pakai id default
-    public $timestamps = true; // aktifin kalau pakai created_at, updated_at
+    protected $table = 'profils'; 
+    protected $primaryKey = 'id'; 
+    public $timestamps = true; 
 
     protected $fillable = ['user_id', 'foto'];
 
