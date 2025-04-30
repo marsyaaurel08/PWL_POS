@@ -26,5 +26,5 @@ Route::post('/logout', \App\Http\Controllers\Api\LogoutController::class)->name(
 Route::get('levels', [LevelController::class, 'index']);
 Route::post('levels', [LevelController::class, 'store']);
 Route::get('levels/{level}', [LevelController::class, 'show']);
-Route::get('levels/{level}', [LevelController::class, 'update']);
-Route::get('levels/{level}', [LevelController::class, 'destroy']);
+Route::put('levels/{level}', [LevelController::class, 'update']);
+Route::delete('levels/{level}', [LevelController::class, 'destroy']);
