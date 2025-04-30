@@ -32,6 +32,14 @@ class RegisterController extends Controller
             'level_id'  => $request->level_id,
         ]);
 
+        //return response JSON user is created
+        if($user){
+            return response()->json([
+                'success' => true,
+                'user' => $user,
+            ], 201);
+        }
+
         //return JSON process insert failed
         return response()->json([
             'success' => false,
