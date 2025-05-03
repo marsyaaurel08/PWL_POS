@@ -21,21 +21,23 @@ class RegisterController extends Controller
         ]);
 
         // if validation fails
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
+        //untuk handle image
+        $image = $request->file('image');
         // create user
         $user = UserModel::create([
             'username' => $request->username,
             'nama' => $request->nama,
             'password' => bcrypt($request->password),
             'level_id'  => $request->level_id,
-            'image' => $request->image
+            'image' => $image->hashName(),
         ]);
 
         //return response JSON user is created
-        if($user){
+        if ($user) {
             return response()->json([
                 'success' => true,
                 'user' => $user,
