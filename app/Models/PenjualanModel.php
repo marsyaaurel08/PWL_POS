@@ -22,24 +22,6 @@ class PenjualanModel extends Model
         return $this->hasMany(PenjualanDetailModel::class, 'penjualan_id', 'penjualan_id');
     }
 
-    // code function untuk mengenerate kode transaksi
-    public static function generateKode()
-    {
-        $prefix = 'TRX';
-        $date = date('Ymd');
-        $lastTransaction = self::whereDate('created_at', date('Y-m-d'))
-            ->orderBy('penjualan_id', 'desc')
-            ->first();
-        
-        $number = 1;
-        if ($lastTransaction) {
-            $lastCode = $lastTransaction->penjualan_kode;
-            $lastNumber = (int) substr($lastCode, -4);
-            $number = $lastNumber + 1;
-        }
-        
-        return $prefix . $date . str_pad($number, 4, '0', STR_PAD_LEFT);
-    }
 
     // code function untuk menghitung total transaksi
     public function getTotalAmount()
